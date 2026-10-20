@@ -1,0 +1,405 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>سوق الكسور</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+Bhaijaan+2:wght@500;700;800&family=Tajawal:wght@500;700&display=swap">
+<style>
+/* Layout: one narrow column under a market awning; a paper receipt holds the prices, big touch targets hold the answers. */
+:root{
+  --display:'Baloo Bhaijaan 2','Tajawal','Segoe UI',Tahoma,sans-serif;
+  --body:'Tajawal','Segoe UI',Tahoma,sans-serif;
+  --bg:#EAF3EE; --surface:#FFFFFF; --ink:#12362C; --muted:#4E6B61; --line:#C3D8CE;
+  --brand:#0F5A45; --on-brand:#FFFFFF;
+  --accent:#F4B000; --awn1:#E4573D; --awn2:#F4B000;
+  --good:#1B8A52; --good-bg:#DDF3E6; --good-ink:#0E5A33;
+  --bad:#C7402B; --bad-bg:#FBE3DD; --bad-ink:#8F2A19;
+  --paper:#FFFFFF; --paper-ink:#1B2B26; --paper-muted:#566F64; --paper-line:#B9CBC2;
+  --slot-bg:#FFEFB8; --slot-line:#C98F00; --paper-good:#0E6B3E;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0C1B16; --surface:#14281F; --ink:#E4F2EB; --muted:#9DBBAF; --line:#2A4A3D;
+    --brand:#3FC38F; --on-brand:#06231A;
+    --good:#4CD08A; --good-bg:#12372A; --good-ink:#8FE6B7;
+    --bad:#FF8A73; --bad-bg:#3C1E19; --bad-ink:#FFB4A3;
+    --paper:#F2F7F4; --paper-ink:#16251F; --paper-muted:#506A5F; --paper-line:#A9BDB3;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0C1B16; --surface:#14281F; --ink:#E4F2EB; --muted:#9DBBAF; --line:#2A4A3D;
+  --brand:#3FC38F; --on-brand:#06231A;
+  --good:#4CD08A; --good-bg:#12372A; --good-ink:#8FE6B7;
+  --bad:#FF8A73; --bad-bg:#3C1E19; --bad-ink:#FFB4A3;
+  --paper:#F2F7F4; --paper-ink:#16251F; --paper-muted:#506A5F; --paper-line:#A9BDB3;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{
+  background:var(--bg); color:var(--ink);
+  font:500 18px/1.6 var(--body);
+  padding-block:0 32px;
+  padding-left:max(16px, env(safe-area-inset-left, 0px));
+  padding-right:max(16px, env(safe-area-inset-right, 0px));
+}
+button{font:inherit;color:inherit;cursor:pointer;-webkit-tap-highlight-color:transparent}
+button:focus-visible{outline:3px solid var(--accent);outline-offset:3px}
+.app{max-width:560px;margin:0 auto}
+[hidden]{display:none!important}
+
+.awning{display:flex;height:34px;margin-top:10px}
+.awning span{flex:1;background:var(--awn1);border-radius:0 0 999px 999px;min-width:0}
+.awning span:nth-child(even){background:var(--awn2)}
+
+.hero{padding:22px 0 8px}
+.hero h1{margin:0;font:800 clamp(38px,11vw,52px)/1.1 var(--display);text-wrap:balance}
+.hero p{margin:8px 0 0;color:var(--muted);max-width:34ch}
+.coin{display:inline-block;margin-top:14px;padding:4px 14px;border-radius:999px;background:var(--surface);border:2px solid var(--line);font-weight:700;font-size:16px}
+
+.tier{margin:22px 0 8px;font:700 15px/1 var(--display);color:var(--muted)}
+.lvl{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:14px;width:100%;min-height:76px;margin-bottom:10px;padding:10px 14px;text-align:start;background:var(--surface);border:2px solid var(--line);border-radius:18px;box-shadow:0 4px 0 var(--line);color:var(--ink)}
+.lvl:active{transform:translateY(2px);box-shadow:0 2px 0 var(--line)}
+.badge{display:grid;place-items:center;width:46px;height:46px;border-radius:50%;background:var(--brand);color:var(--on-brand);font:800 24px/1 var(--display);padding-top:4px}
+.lvl b{display:block;font:800 21px/1.25 var(--display)}
+.lvl small{display:block;color:var(--muted);font-size:15px;line-height:1.4}
+.stars{font-size:20px;letter-spacing:1px;white-space:nowrap;direction:ltr}
+.stars .on{color:var(--accent)}
+.stars .off{color:var(--line)}
+
+.bar{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:14px 0 6px}
+.ghost{background:none;border:2px solid var(--line);border-radius:999px;padding:4px 14px;font-weight:700;font-size:16px;color:var(--ink)}
+.lvlname{font:800 20px/1.2 var(--display);text-align:end;min-width:0}
+.dots{display:flex;gap:8px;padding:6px 0 14px}
+.dot{flex:1;height:10px;border-radius:999px;background:var(--line)}
+.dot.first{background:var(--good)}
+.dot.second{background:var(--accent)}
+.dot.miss{background:var(--bad)}
+.dot.cur{background:var(--ink);opacity:.55}
+
+.receipt{position:relative;background:var(--paper);color:var(--paper-ink);padding:14px 18px 12px;border-radius:10px 10px 0 0;margin-bottom:8px}
+.receipt::after{content:"";position:absolute;inset:100% 0 auto 0;height:9px;background:conic-gradient(from 135deg at 50% 0,var(--paper) 90deg,transparent 0) 0 0/18px 9px repeat-x}
+.rhead{display:flex;justify-content:space-between;gap:8px;font-size:14px;font-weight:700;color:var(--paper-muted);padding-bottom:8px;border-bottom:2px dashed var(--paper-line);margin-bottom:6px}
+.row{display:flex;align-items:center;gap:10px;min-height:46px}
+.row .em{font-size:28px;line-height:1}
+.row .nm{font-weight:700}
+.leader{flex:1;min-width:12px;border-bottom:3px dotted var(--paper-line);transform:translateY(6px)}
+.pr{direction:ltr;text-align:right;min-width:5.6ch;font:800 24px/1.2 var(--display);font-variant-numeric:tabular-nums}
+.sep{border-top:2px dashed var(--paper-line);margin:6px 0}
+.row.total .nm{font:800 20px/1 var(--display)}
+.slot{direction:ltr;min-width:5.6ch;text-align:center;padding:0 10px;border:2px dashed var(--slot-line);border-radius:10px;background:var(--slot-bg);color:#3A2A00;font:800 26px/1.4 var(--display);font-variant-numeric:tabular-nums}
+.slot.ok{border-style:solid;border-color:var(--paper-good);background:transparent;color:var(--paper-good)}
+.slot.ok.pop{animation:pop .4s ease-out}
+@keyframes pop{0%{transform:scale(.8)}60%{transform:scale(1.15)}100%{transform:scale(1)}}
+
+.prompt{margin:14px 0 10px;font:800 24px/1.3 var(--display);text-wrap:balance}
+
+.choices{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.choice{min-height:76px;padding:8px 4px;background:var(--surface);color:var(--ink);border:2px solid var(--line);border-radius:18px;box-shadow:0 4px 0 var(--line);font:800 clamp(22px,7vw,30px)/1.2 var(--display);direction:ltr;font-variant-numeric:tabular-nums}
+.choice:active:not(:disabled){transform:translateY(2px);box-shadow:0 2px 0 var(--line)}
+.choice.wrong{background:var(--bad-bg);border-color:var(--bad);color:var(--bad-ink);box-shadow:none;opacity:.8}
+.choice.right{background:var(--good-bg);border-color:var(--good);color:var(--good-ink);box-shadow:none}
+
+.entry{display:flex;align-items:baseline;justify-content:center;gap:10px;min-height:68px;padding:6px 12px;margin-bottom:10px;background:var(--surface);border:2px solid var(--line);border-radius:18px}
+.entry .typed{direction:ltr;font:800 38px/1.5 var(--display);font-variant-numeric:tabular-nums}
+.entry .typed.empty{color:var(--line)}
+.entry small{color:var(--muted);font-weight:700}
+.entry.shake{animation:shake .3s}
+@keyframes shake{25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+.pad{direction:ltr;display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.key{min-height:56px;background:var(--surface);color:var(--ink);border:2px solid var(--line);border-radius:14px;box-shadow:0 3px 0 var(--line);font:800 28px/1 var(--display);padding-top:6px}
+.key:active{transform:translateY(2px);box-shadow:0 1px 0 var(--line)}
+.key.util{font-size:24px}
+
+.primary{display:block;width:100%;margin-top:12px;min-height:58px;background:var(--brand);color:var(--on-brand);border:0;border-radius:18px;font:800 22px/1 var(--display);padding-top:6px}
+.primary:active{transform:translateY(2px)}
+.primary.alt{background:var(--surface);color:var(--ink);border:2px solid var(--line)}
+
+.fb{margin-top:12px;padding:12px 16px;border-radius:16px;font-weight:700;line-height:1.5}
+.fb:empty{display:none}
+.fb.good{background:var(--good-bg);color:var(--good-ink)}
+.fb.bad{background:var(--bad-bg);color:var(--bad-ink)}
+.fb strong{display:block;font:800 22px/1.3 var(--display)}
+.fb span{font-weight:500}
+.num{direction:ltr;unicode-bidi:isolate;display:inline-block}
+
+.done{text-align:center;padding-top:26px}
+.done .big{font-size:64px;letter-spacing:6px;direction:ltr}
+.done h2{margin:6px 0;font:800 34px/1.2 var(--display)}
+.done p{margin:0 auto;color:var(--muted);max-width:30ch}
+
+@media (prefers-reduced-motion:reduce){
+  .slot.ok.pop,.entry.shake{animation:none}
+  .lvl:active,.choice:active,.key:active,.primary:active{transform:none}
+}
+</style>
+
+<div class="app" dir="rtl" lang="ar">
+  <div class="awning" id="awning" aria-hidden="true"></div>
+
+  <section id="home">
+    <header class="hero">
+      <h1>سوق الكسور</h1>
+      <p>تسوّق، اجمع الأسعار، واحسب الباقي. ستة مستويات من السهل إلى الصعب.</p>
+      <div class="coin">تذكّر: ١ ريال = ١٠٠ هللة</div>
+    </header>
+    <div id="levels"></div>
+  </section>
+
+  <section id="play" hidden>
+    <div class="bar">
+      <button class="ghost" id="back" type="button">المستويات ←</button>
+      <div class="lvlname" id="lvlname"></div>
+    </div>
+    <div class="dots" id="dots" aria-hidden="true"></div>
+    <div class="receipt" id="receipt"></div>
+    <p class="prompt" id="prompt"></p>
+    <div id="answer"></div>
+    <div class="fb" id="fb" role="status" aria-live="polite"></div>
+    <button class="primary" id="next" type="button" hidden>التالي</button>
+  </section>
+
+  <section id="done" class="done" hidden>
+    <div class="big stars" id="doneStars"></div>
+    <h2 id="doneTitle"></h2>
+    <p id="doneText"></p>
+    <button class="primary" id="again" type="button">العب هذا المستوى مرة ثانية</button>
+    <button class="primary" id="upnext" type="button">المستوى التالي</button>
+    <button class="primary alt" id="all" type="button">كل المستويات</button>
+  </section>
+</div>
+
+<script>
+(function(){
+  document.documentElement.setAttribute('dir','rtl');
+  document.documentElement.setAttribute('lang','ar');
+
+  var AR='٠١٢٣٤٥٦٧٨٩';
+  function ar(s){return String(s).replace(/\d/g,function(d){return AR[d]}).replace('.','٫')}
+  function fmt(c,dp){var r=Math.floor(c/100),h=String(c%100).padStart(2,'0');return ar(dp===1?r+'.'+h[0]:r+'.'+h)}
+  function words(c){var r=Math.floor(c/100),h=c%100,p=[];if(r>0)p.push(ar(r)+' ريال');if(h>0)p.push(ar(h)+' هللة');return p.join(' و')}
+  function rnd(a,b){return Math.floor(Math.random()*(b-a+1))+a}
+  function shuffle(a){for(var i=a.length-1;i>0;i--){var j=rnd(0,i),t=a[i];a[i]=a[j];a[j]=t}return a}
+  function tenths(a,b){return rnd(a/10,b/10)*10}
+  function hund(a,b){var c=rnd(a,b);if(c%10===0&&Math.random()<.85)c=Math.min(b,c+rnd(1,9));return c}
+  function $(id){return document.getElementById(id)}
+
+  var ITEMS=[
+    {n:'تفاحة',e:'🍎'},{n:'موز',e:'🍌'},{n:'حليب',e:'🥛'},{n:'خبز',e:'🍞'},
+    {n:'عصير',e:'🧃'},{n:'بيض',e:'🥚'},{n:'جبن',e:'🧀'},{n:'برتقال',e:'🍊'},
+    {n:'عنب',e:'🍇'},{n:'بسكويت',e:'🍪'},{n:'شوكولاتة',e:'🍫'},{n:'آيس كريم',e:'🍦'},
+    {n:'جزر',e:'🥕'},{n:'طماطم',e:'🍅'},{n:'بطيخ',e:'🍉'},{n:'فراولة',e:'🍓'},{n:'مانجو',e:'🥭'}
+  ];
+
+  var LV=[
+    {id:1,name:'البقالة الصغيرة',desc:'اجمع سعرين بخانة عشرية واحدة',tier:'سهل',dp:1,type:'add',n:2,mode:'choice',p:function(){return tenths(50,490)}},
+    {id:2,name:'الباقي الأول',desc:'اطرح ثمن سلعة من ٥ أو ١٠ ريال',tier:'سهل',dp:1,type:'change',n:1,mode:'choice'},
+    {id:3,name:'عالم الهللات',desc:'اجمع سعرين بخانتين عشريتين',tier:'متوسط',dp:2,type:'add',n:2,mode:'choice',p:function(){return hund(50,899)}},
+    {id:4,name:'سلة التسوق',desc:'اجمع ثلاثة أسعار واكتب الجواب',tier:'متوسط',dp:2,type:'add',n:3,mode:'keypad',p:function(){return hund(50,899)}},
+    {id:5,name:'الصندوق',desc:'اجمع سلعتين ثم احسب الباقي',tier:'صعب',dp:2,type:'change',n:2,mode:'keypad',paids:[10,20,50],p:function(){return hund(100,999)}},
+    {id:6,name:'المتسوّق الذكي',desc:'ثلاث سلع والباقي من ٢٠ أو ٥٠ أو ١٠٠',tier:'صعب',dp:2,type:'change',n:3,mode:'keypad',paids:[20,50,100],p:function(){return hund(100,1999)}}
+  ];
+
+  function makeQ(L){
+    var its=shuffle(ITEMS.slice()).slice(0,L.n),items,paid=null,ans;
+    if(L.id===2){
+      paid=[5,10][rnd(0,1)];
+      var c;do{c=tenths(110,paid*100-10)}while(c%100===0);
+      items=[{n:its[0].n,e:its[0].e,c:c}];ans=paid*100-c;
+    }else{
+      items=its.map(function(it){return {n:it.n,e:it.e,c:L.p()}});
+      var sum=items.reduce(function(s,i){return s+i.c},0);
+      if(L.type==='add')ans=sum;
+      else{paid=L.paids.filter(function(p){return p*100>sum})[0];ans=paid*100-sum}
+    }
+    return {items:items,paid:paid,type:L.type,answer:ans};
+  }
+
+  function makeChoices(ans,L){
+    var steps=L.dp===1?[10,100,-10,-100]:[1,10,100,-1,-10,-100],cand=[];
+    steps.forEach(function(s){var v=ans+s;if(v>0)cand.push(v)});
+    return shuffle([ans].concat(shuffle(cand).slice(0,2)));
+  }
+
+  var store={};
+  try{store=JSON.parse(localStorage.getItem('souq-alkusur-stars')||'{}')||{}}catch(e){store={}}
+  function save(){try{localStorage.setItem('souq-alkusur-stars',JSON.stringify(store))}catch(e){}}
+  function starsHtml(n){var h='';for(var i=1;i<=3;i++)h+='<span class="'+(i<=n?'on':'off')+'">★</span>';return h}
+
+  var aw=$('awning');for(var i=0;i<14;i++)aw.appendChild(document.createElement('span'));
+
+  function show(name){
+    ['home','play','done'].forEach(function(s){$(s).hidden=(s!==name)});
+    window.scrollTo(0,0);
+  }
+
+  function renderHome(){
+    var h='',tier='';
+    LV.forEach(function(L){
+      if(L.tier!==tier){tier=L.tier;h+='<div class="tier">'+tier+'</div>'}
+      var s=store[L.id]||0;
+      h+='<button type="button" class="lvl" data-id="'+L.id+'"><span class="badge">'+ar(L.id)+'</span>'
+        +'<span><b>'+L.name+'</b><small>'+L.desc+'</small></span>'
+        +'<span class="stars" aria-label="'+ar(s)+' من ٣ نجوم">'+starsHtml(s)+'</span></button>';
+    });
+    $('levels').innerHTML=h;
+  }
+  $('levels').addEventListener('click',function(e){
+    var b=e.target.closest('.lvl');if(b)start(Number(b.dataset.id));
+  });
+
+  var L,q,qi,res,att,typed,locked;
+
+  function start(id){
+    L=LV[id-1];qi=0;res=[];
+    $('lvlname').textContent='المستوى '+ar(L.id)+' · '+L.name;
+    show('play');loadQ();
+  }
+
+  function dots(){
+    var h='';
+    for(var i=0;i<5;i++){h+='<span class="dot '+(res[i]||(i===qi?'cur':''))+'"></span>'}
+    $('dots').innerHTML=h;
+  }
+
+  function row(em,nm,price){
+    return '<div class="row"><span class="em" aria-hidden="true">'+em+'</span><span class="nm">'+nm+'</span><span class="leader"></span><span class="pr">'+price+'</span></div>';
+  }
+
+  function loadQ(){
+    q=makeQ(L);att=0;typed='';locked=false;
+    dots();
+    var h='<div class="rhead"><span>فاتورة بقالة الهناء</span><span>الأسعار بالريال</span></div>';
+    q.items.forEach(function(it){h+=row(it.e,it.n,fmt(it.c,L.dp))});
+    h+='<div class="sep"></div>';
+    if(q.type==='add'){
+      h+='<div class="row total"><span class="nm">المجموع</span><span class="leader"></span><span class="slot" id="slot">؟</span></div>';
+    }else{
+      h+='<div class="row"><span class="nm">المبلغ المدفوع</span><span class="leader"></span><span class="pr">'+fmt(q.paid*100,L.dp)+'</span></div>';
+      h+='<div class="row total"><span class="nm">الباقي</span><span class="leader"></span><span class="slot" id="slot">؟</span></div>';
+    }
+    $('receipt').innerHTML=h;
+    $('prompt').textContent=q.type==='add'?'كم المجموع بالريال؟':'كم الباقي بالريال؟';
+    $('fb').className='fb';$('fb').innerHTML='';
+    $('next').hidden=true;
+
+    if(L.mode==='choice'){
+      var c=makeChoices(q.answer,L),a='<div class="choices">';
+      c.forEach(function(v){a+='<button type="button" class="choice" data-v="'+v+'">'+fmt(v,L.dp)+'</button>'});
+      $('answer').innerHTML=a+'</div>';
+    }else{
+      var keys=['1','2','3','4','5','6','7','8','9','.','0','⌫'],k='';
+      keys.forEach(function(x){
+        var lab=x==='.'?'٫':x==='⌫'?'⌫':ar(x);
+        k+='<button type="button" class="key'+(x==='⌫'?' util':'')+'" data-k="'+x+'" aria-label="'+(x==='.'?'فاصلة':x==='⌫'?'مسح':lab)+'">'+lab+'</button>';
+      });
+      $('answer').innerHTML='<div class="entry" id="entry"><span class="typed empty" id="typed">؟</span><small>ريال</small></div>'
+        +'<div class="pad">'+k+'</div><button type="button" class="primary" id="ok">تأكيد</button>';
+    }
+  }
+
+  function showTyped(){
+    var t=$('typed');if(!t)return;
+    t.textContent=typed?ar(typed):'؟';
+    t.className='typed'+(typed?'':' empty');
+  }
+  function press(k){
+    if(locked)return;
+    if(k==='⌫'){typed=typed.slice(0,-1)}
+    else if(k==='.'){
+      if(typed.indexOf('.')>-1||typed.length>=6)return;
+      if(typed==='')typed='0';
+      typed+='.';
+    }else{
+      if(typed.length>=7)return;
+      if(typed.indexOf('.')>-1&&typed.split('.')[1].length>=2)return;
+      typed=(typed==='0')?k:typed+k;
+    }
+    showTyped();
+  }
+  function confirmTyped(){
+    if(locked||!typed)return;
+    check(Math.round(parseFloat(typed)*100),null);
+  }
+
+  $('answer').addEventListener('click',function(e){
+    if(locked)return;
+    var ch=e.target.closest('.choice');
+    if(ch){check(Number(ch.dataset.v),ch);return}
+    var ky=e.target.closest('.key');
+    if(ky){press(ky.dataset.k);return}
+    if(e.target.closest('#ok'))confirmTyped();
+  });
+  document.addEventListener('keydown',function(e){
+    if($('play').hidden||L.mode!=='keypad'||locked)return;
+    if(/^[0-9]$/.test(e.key))press(e.key);
+    else if(e.key==='.'||e.key===','||e.key==='٫')press('.');
+    else if(e.key==='Backspace')press('⌫');
+    else if(e.key==='Enter'){e.preventDefault();confirmTyped()}
+  });
+
+  function hint(){
+    if(q.type==='add')return 'ضع الفاصلة تحت الفاصلة، ثم اجمع من اليمين.';
+    if(q.items.length===1)return 'اطرح ثمن السلعة من المبلغ المدفوع.';
+    return 'اجمع الأسعار أولاً، ثم اطرح المجموع من المبلغ المدفوع.';
+  }
+  function finishQ(code){
+    locked=true;res[qi]=code;dots();
+    var slot=$('slot');slot.textContent=fmt(q.answer,L.dp);slot.className='slot ok pop';
+    Array.prototype.forEach.call(document.querySelectorAll('.choice'),function(b){
+      b.disabled=true;if(Number(b.dataset.v)===q.answer){b.classList.remove('wrong');b.classList.add('right')}
+    });
+    var nb=$('next');nb.textContent=qi===4?'شاهد النتيجة':'التالي';nb.hidden=false;nb.focus();
+  }
+  function check(v,btn){
+    var fb=$('fb');
+    if(v===q.answer){
+      finishQ(att===0?'first':'second');
+      fb.className='fb good';
+      fb.innerHTML='<strong>'+(att===0?'أحسنت!':'ممتاز، نجحت!')+'</strong><span>'+(q.type==='add'?'المجموع':'الباقي')
+        +' <span class="num">'+fmt(q.answer,L.dp)+'</span> ريال، أي '+words(q.answer)+'.</span>';
+      return;
+    }
+    att++;
+    if(att===1){
+      if(btn){btn.classList.add('wrong');btn.disabled=true}
+      else{typed='';showTyped();var en=$('entry');en.classList.remove('shake');void en.offsetWidth;en.classList.add('shake')}
+      fb.className='fb bad';
+      fb.innerHTML='<strong>قريب! حاول مرة ثانية.</strong><span>'+hint()+'</span>';
+    }else{
+      finishQ('miss');
+      var extra='';
+      if(q.type==='change'&&q.items.length>1){
+        var sum=q.paid*100-q.answer;
+        extra='مجموع المشتريات <span class="num">'+fmt(sum,L.dp)+'</span> ريال، والباقي ';
+      }else{extra=q.type==='add'?'المجموع الصحيح ':'الباقي الصحيح '}
+      fb.className='fb bad';
+      fb.innerHTML='<strong>لا بأس، نتعلّم معاً.</strong><span>'+extra+'<span class="num">'+fmt(q.answer,L.dp)+'</span> ريال.</span>';
+    }
+  }
+
+  $('next').addEventListener('click',function(){
+    if(qi<4){qi++;loadQ();window.scrollTo(0,0)}else finishLevel();
+  });
+
+  function finishLevel(){
+    var f=res.filter(function(r){return r==='first'}).length;
+    var s=f>=4?3:f>=2?2:1;
+    store[L.id]=Math.max(store[L.id]||0,s);save();
+    $('doneStars').innerHTML=starsHtml(s);
+    $('doneStars').setAttribute('aria-label',ar(s)+' من ٣ نجوم');
+    $('doneTitle').textContent=s===3?'ممتاز! متسوّق ماهر':s===2?'أحسنت!':'محاولة جيدة';
+    $('doneText').textContent='أجبت صحيحاً من أول مرة في '+ar(f)+' من ٥ أسئلة.'+(s<3?' جرّب مرة ثانية لتحصل على نجوم أكثر.':'');
+    $('upnext').hidden=(L.id>=LV.length);
+    show('done');
+  }
+  $('again').addEventListener('click',function(){start(L.id)});
+  $('upnext').addEventListener('click',function(){start(L.id+1)});
+  $('all').addEventListener('click',function(){renderHome();show('home')});
+  $('back').addEventListener('click',function(){renderHome();show('home')});
+
+  renderHome();
+})();
+</script>
+
+</body></html>
